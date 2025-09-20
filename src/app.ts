@@ -13,5 +13,6 @@ app.register(webhookRoutes);
 app
   .listen({
     port: Number(port),
+    host: "0.0.0.0",
   })
   .then(() => console.log("Rodando na porta " + port));
