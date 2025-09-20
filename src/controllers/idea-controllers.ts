@@ -1,9 +1,6 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import { prisma } from "../lib/prisma";
-import {
-  createPaymentLink,
-  updatePaymentLink,
-} from "../services/asaas-service";
+import { createPaymentLink } from "../services/asaas-service";
 
 type CreateIdeaRequest = {
   title: string;
@@ -19,14 +16,12 @@ const createIdeaController = async (
   const { title, description, email, amount } =
     request.body as CreateIdeaRequest;
 
-  // Criar o link de pagamento inicialmente sem successUrl
   const paymentLink = await createPaymentLink({
     name: title,
     description,
-    successUrl: "https://www.google.com", // URL temporária
+    successUrl: "https://www.google.com",
   });
 
-  // Criar a ideia no banco
   const idea = await prisma.idea.create({
     data: {
       title,
@@ -36,12 +31,6 @@ const createIdeaController = async (
       paymentLinkId: paymentLink.id,
       paymentLink: paymentLink.url,
     },
-  });
-
-  // Atualizar o link de pagamento com o successUrl contendo o ID da ideia
-  await updatePaymentLink(paymentLink.id, {
-    successUrl: `https://seu-frontend.com/success/${idea.id}`,
-    autoRedirect: true,
   });
 
   return reply.status(201).send(idea);
