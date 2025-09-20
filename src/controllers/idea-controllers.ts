@@ -6,6 +6,7 @@ type CreateIdeaRequest = {
   title: string;
   description: string;
   email: string;
+  categoryId?: string;
   amount: number;
 };
 
@@ -13,7 +14,7 @@ const createIdeaController = async (
   request: FastifyRequest,
   reply: FastifyReply,
 ) => {
-  const { title, description, email, amount } =
+  const { title, description, email, categoryId, amount } =
     request.body as CreateIdeaRequest;
 
   const paymentLink = await createPaymentLink({
@@ -27,6 +28,7 @@ const createIdeaController = async (
       title,
       description,
       email,
+      categoryId,
       amount,
       paymentLinkId: paymentLink.id,
       paymentLink: paymentLink.url,
@@ -40,10 +42,25 @@ const createIdeaController = async (
   });
 };
 
-const getAllIdeasController = async (_, reply: FastifyReply) => {
+const getAllIdeasController = async (
+  request: FastifyRequest,
+  reply: FastifyReply,
+) => {
+  const { categoryId } = request.query as { categoryId?: string };
+
+  const whereClause = categoryId ? { categoryId } : {};
+
   const ideas = await prisma.idea.findMany({
+    where: whereClause,
     orderBy: { createdAt: "desc" },
     include: {
+      category: {
+        select: {
+          id: true,
+          name: true,
+          description: true,
+        },
+      },
       donors: {
         orderBy: { createdAt: "desc" },
         take: 5,
@@ -82,6 +99,13 @@ const getIdeaController = async (
   const idea = await prisma.idea.findUnique({
     where: { id },
     include: {
+      category: {
+        select: {
+          id: true,
+          name: true,
+          description: true,
+        },
+      },
       donors: {
         orderBy: { createdAt: "desc" },
         take: 5,

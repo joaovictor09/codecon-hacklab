@@ -1,3 +1,17 @@
+# @name CreateCategory
+POST http://localhost:3333/categories
+Content-Type: application/json
+
+{
+  "name": "Tecnologia",
+  "description": "Ideias relacionadas à tecnologia e inovação"
+}
+
+###
+# @name GetAllCategories
+GET http://localhost:3333/categories
+
+###
 # @name CreateIdea
 POST http://localhost:3333/ideas
 Content-Type: application/json
@@ -6,12 +20,17 @@ Content-Type: application/json
   "title": "Teste de ideia inovadora",
   "description": "Teste de nova ideia",
   "email": "teste@teste.com",
+  "categoryId": "CATEGORY_ID_AQUI",
   "amount": 100
 }
 
 ###
 # @name GetAllIdeas
 GET http://localhost:3333/ideas
+
+###
+# @name GetAllIdeasByCategory
+GET http://localhost:3333/ideas?categoryId=CATEGORY_ID_AQUI
 
 ###
 # @name GetIdea

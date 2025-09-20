@@ -52,6 +52,7 @@ export const createPaymentLink = async (request: CreatePaymentLinkRequest) => {
       billingType: "CREDIT_CARD",
       chargeType: "DETACHED",
       dueDateLimitDays: 1,
+      notificationEnabled: false,
     })
     .catch((error) => {
       console.error(error.response.data);

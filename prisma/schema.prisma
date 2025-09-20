@@ -8,11 +8,24 @@ datasource db {
   url      = "postgresql://postgres:r4tmsgc9ok65vlzz@5.78.115.222:5432/postgres"
 }
 
+model Category {
+  id String @id @default(uuid())
+  name String @unique
+  description String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  ideas Idea[]
+  
+  @@map("categories")
+}
+
 model Idea {
   id String @id @default(uuid()) 
   title String
   description String
   email String
+  categoryId String? @map("category_id")
   amount Decimal @default(0)
   currentAmount Decimal @default(0) @map("current_amount")
   paymentLinkId String @map("payment_link_id")
@@ -20,6 +33,7 @@ model Idea {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   
+  category Category? @relation(fields: [categoryId], references: [id])
   donors Donor[]
   
   @@map("ideas")

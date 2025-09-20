@@ -82,7 +82,6 @@ const webhookController = async (
       });
 
       if (idea) {
-        // Buscar dados do cliente no Asaas
         let customerData: { name: string; email: string } | null = null;
         try {
           const customer = await getCustomer(payment.customer);
@@ -94,7 +93,6 @@ const webhookController = async (
           console.error("Erro ao buscar dados do cliente:", error);
         }
 
-        // Criar registro do doador
         const donor = await prisma.donor.create({
           data: {
             ideaId: idea.id,
