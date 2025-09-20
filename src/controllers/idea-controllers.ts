@@ -41,13 +41,34 @@ const createIdeaController = async (
 };
 
 const getAllIdeasController = async (_, reply: FastifyReply) => {
-  const ideas = await prisma.idea.findMany();
+  const ideas = await prisma.idea.findMany({
+    orderBy: { createdAt: "desc" },
+    include: {
+      donors: {
+        orderBy: { createdAt: "desc" },
+        take: 5,
+        select: {
+          id: true,
+          donorName: true,
+          donorEmail: true,
+          amount: true,
+          paymentDate: true,
+          createdAt: true,
+        },
+      },
+    },
+  });
+
   return reply.status(200).send(
     ideas.map((idea) => {
       return {
         ...idea,
         amount: idea.amount.toNumber(),
         currentAmount: idea.currentAmount.toNumber(),
+        donors: idea.donors.map((donor) => ({
+          ...donor,
+          amount: donor.amount.toNumber(),
+        })),
       };
     }),
   );
@@ -60,11 +81,34 @@ const getIdeaController = async (
   const { id } = request.params as { id: string };
   const idea = await prisma.idea.findUnique({
     where: { id },
+    include: {
+      donors: {
+        orderBy: { createdAt: "desc" },
+        take: 5,
+        select: {
+          id: true,
+          donorName: true,
+          donorEmail: true,
+          amount: true,
+          paymentDate: true,
+          createdAt: true,
+        },
+      },
+    },
   });
+
+  if (!idea) {
+    return reply.status(404).send({ message: "Ideia não encontrada" });
+  }
+
   return reply.status(200).send({
     ...idea,
-    amount: idea?.amount.toNumber(),
-    currentAmount: idea?.currentAmount.toNumber(),
+    amount: idea.amount.toNumber(),
+    currentAmount: idea.currentAmount.toNumber(),
+    donors: idea.donors.map((donor) => ({
+      ...donor,
+      amount: donor.amount.toNumber(),
+    })),
   });
 };
 
