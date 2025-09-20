@@ -71,11 +71,9 @@ const webhookController = async (
   try {
     const payload = request.body as AsaasWebhookPayload;
 
-    // Verificar se é um evento de pagamento confirmado
     if (payload.event === "PAYMENT_CONFIRMED") {
       const { payment } = payload;
 
-      // Buscar a ideia pelo paymentLinkId
       const idea = await prisma.idea.findFirst({
         where: {
           paymentLinkId: payment.paymentLink,
@@ -83,7 +81,6 @@ const webhookController = async (
       });
 
       if (idea) {
-        // Atualizar o valor atual da meta
         const updatedIdea = await prisma.idea.update({
           where: { id: idea.id },
           data: {
@@ -114,7 +111,6 @@ const webhookController = async (
       }
     }
 
-    // Para outros eventos, apenas confirma o recebimento
     return reply.status(200).send({
       success: true,
       message: "Webhook recebido",
