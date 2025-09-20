@@ -16,3 +16,71 @@ GET http://localhost:3333/ideas
 ###
 # @name GetIdea
 GET http://localhost:3333/ideas/418f7d78-5061-4b0c-b5e9-d033af67880c
+
+###
+# @name WebhookAsaas
+POST http://localhost:3333/webhook/asaas
+Content-Type: application/json
+
+{
+  "id": "evt_15e444ff9b9ab9ec29294aa1abe68025&10497974",
+  "event": "PAYMENT_CONFIRMED",
+  "dateCreated": "2025-09-20 11:44:46",
+  "payment": {
+    "object": "payment",
+    "id": "pay_t62scd2creyy9qzf",
+    "dateCreated": "2025-09-20",
+    "customer": "cus_000007035278",
+    "checkoutSession": null,
+    "paymentLink": "xaz29dh2qy1j4bc4",
+    "value": 100,
+    "netValue": 97.52,
+    "originalValue": null,
+    "interestValue": null,
+    "description": "Teste de nova ideia",
+    "billingType": "CREDIT_CARD",
+    "confirmedDate": "2025-09-20",
+    "creditCard": {
+      "creditCardNumber": "4444",
+      "creditCardBrand": "VISA",
+      "creditCardToken": "ee4dd2db-e49a-4752-8781-f21e2c1ba7f5"
+    },
+    "pixTransaction": null,
+    "status": "CONFIRMED",
+    "dueDate": "2025-09-20",
+    "originalDueDate": "2025-09-20",
+    "paymentDate": null,
+    "clientPaymentDate": "2025-09-20",
+    "installmentNumber": null,
+    "invoiceUrl": "https://sandbox.asaas.com/i/t62scd2creyy9qzf",
+    "invoiceNumber": "11379810",
+    "externalReference": null,
+    "deleted": false,
+    "anticipated": false,
+    "anticipable": false,
+    "creditDate": "2025-10-22",
+    "estimatedCreditDate": "2025-10-22",
+    "transactionReceiptUrl": "https://sandbox.asaas.com/comprovantes/7200442354269926",
+    "nossoNumero": null,
+    "bankSlipUrl": null,
+    "lastInvoiceViewedDate": null,
+    "lastBankSlipViewedDate": null,
+    "discount": {
+      "value": 0,
+      "limitDate": null,
+      "dueDateLimitDays": 0,
+      "type": "FIXED"
+    },
+    "fine": {
+      "value": 0,
+      "type": "FIXED"
+    },
+    "interest": {
+      "value": 0,
+      "type": "PERCENTAGE"
+    },
+    "postalService": false,
+    "escrow": null,
+    "refunds": null
+  }
+}
