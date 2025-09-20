@@ -1,0 +1,18 @@
+# @name CreateIdea
+POST http://localhost:3333/ideas
+Content-Type: application/json
+
+{
+  "title": "Teste de ideia inovadora",
+  "description": "Teste de nova ideia",
+  "email": "teste@teste.com",
+  "amount": 100
+}
+
+###
+# @name GetAllIdeas
+GET http://localhost:3333/ideas
+
+###
+# @name GetIdea
+GET http://localhost:3333/ideas/418f7d78-5061-4b0c-b5e9-d033af67880c
