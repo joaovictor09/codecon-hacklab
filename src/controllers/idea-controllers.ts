@@ -33,12 +33,24 @@ const createIdeaController = async (
     },
   });
 
-  return reply.status(201).send(idea);
+  return reply.status(201).send({
+    ...idea,
+    amount: idea.amount.toNumber(),
+    currentAmount: idea.currentAmount.toNumber(),
+  });
 };
 
 const getAllIdeasController = async (_, reply: FastifyReply) => {
   const ideas = await prisma.idea.findMany();
-  return reply.status(200).send(ideas);
+  return reply.status(200).send(
+    ideas.map((idea) => {
+      return {
+        ...idea,
+        amount: idea.amount.toNumber(),
+        currentAmount: idea.currentAmount.toNumber(),
+      };
+    }),
+  );
 };
 
 const getIdeaController = async (
@@ -49,7 +61,11 @@ const getIdeaController = async (
   const idea = await prisma.idea.findUnique({
     where: { id },
   });
-  return reply.status(200).send(idea);
+  return reply.status(200).send({
+    ...idea,
+    amount: idea?.amount.toNumber(),
+    currentAmount: idea?.currentAmount.toNumber(),
+  });
 };
 
 export { createIdeaController, getAllIdeasController, getIdeaController };
