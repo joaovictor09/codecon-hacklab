@@ -4,6 +4,7 @@ import { ideaRoutes } from "./routes/idea-routes";
 import { webhookRoutes } from "./routes/webhook-routes";
 
 const app = fastify();
+const port = process.env.PORT || 3333;
 
 app.register(health);
 app.register(ideaRoutes);
@@ -11,6 +12,6 @@ app.register(webhookRoutes);
 
 app
   .listen({
-    port: 3333,
+    port: Number(port),
   })
-  .then(() => console.log("Rodando em http://localhost:3333"));
+  .then(() => console.log("Rodando na porta " + port));
