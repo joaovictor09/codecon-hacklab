@@ -1,9 +1,9 @@
-import { FastifyInstance } from "fastify";
+import type { FastifyInstance } from "fastify";
 
 export function health(app: FastifyInstance) {
-  app.get('/health', () => {
+  app.get("/health", () => {
     return {
-      ok: true
-    }
-  })
+      ok: true,
+    };
+  });
 }
