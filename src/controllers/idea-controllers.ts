@@ -68,4 +68,37 @@ const getIdeaController = async (
   });
 };
 
-export { createIdeaController, getAllIdeasController, getIdeaController };
+const getIdeaDonorsController = async (
+  request: FastifyRequest,
+  reply: FastifyReply,
+) => {
+  const { id } = request.params as { id: string };
+
+  const donors = await prisma.donor.findMany({
+    where: { ideaId: id },
+    orderBy: { createdAt: "desc" },
+    take: 5,
+    select: {
+      id: true,
+      donorName: true,
+      donorEmail: true,
+      amount: true,
+      paymentDate: true,
+      createdAt: true,
+    },
+  });
+
+  return reply.status(200).send({
+    donors: donors.map((donor) => ({
+      ...donor,
+      amount: donor.amount.toNumber(),
+    })),
+  });
+};
+
+export {
+  createIdeaController,
+  getAllIdeasController,
+  getIdeaController,
+  getIdeaDonorsController,
+};

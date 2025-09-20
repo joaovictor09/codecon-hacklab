@@ -10,8 +10,8 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "postgresql"
+  url      = "postgresql://postgres:r4tmsgc9ok65vlzz@5.78.115.222:5432/postgres"
 }
 
 model Idea {
@@ -26,5 +26,22 @@ model Idea {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   
+  donors Donor[]
+  
   @@map("ideas")
+}
+
+model Donor {
+  id String @id @default(uuid())
+  ideaId String @map("idea_id")
+  paymentId String @map("payment_id")
+  donorName String? @map("donor_name")
+  donorEmail String? @map("donor_email")
+  amount Decimal
+  paymentDate DateTime @map("payment_date")
+  createdAt DateTime @default(now())
+  
+  idea Idea @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+  
+  @@map("donors")
 }

@@ -1,5 +1,6 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import { prisma } from "../lib/prisma";
+import { getCustomer } from "../services/asaas-service";
 
 type AsaasWebhookPayload = {
   id: string;
@@ -81,6 +82,30 @@ const webhookController = async (
       });
 
       if (idea) {
+        // Buscar dados do cliente no Asaas
+        let customerData: { name: string; email: string } | null = null;
+        try {
+          const customer = await getCustomer(payment.customer);
+          customerData = {
+            name: customer.name,
+            email: customer.email,
+          };
+        } catch (error) {
+          console.error("Erro ao buscar dados do cliente:", error);
+        }
+
+        // Criar registro do doador
+        const donor = await prisma.donor.create({
+          data: {
+            ideaId: idea.id,
+            paymentId: payment.id,
+            donorName: customerData?.name || null,
+            donorEmail: customerData?.email || null,
+            amount: payment.value,
+            paymentDate: new Date(payment.clientPaymentDate),
+          },
+        });
+
         const updatedIdea = await prisma.idea.update({
           where: { id: idea.id },
           data: {
@@ -93,12 +118,16 @@ const webhookController = async (
         console.log(
           `Meta atualizada para a ideia ${idea.id}: ${updatedIdea.currentAmount}/${idea.amount}`,
         );
+        console.log(
+          `Novo doador registrado: ${donor.id} - ${customerData?.name || "Anônimo"} - R$ ${payment.value}`,
+        );
 
         return reply.status(200).send({
           success: true,
-          message: "Meta atualizada com sucesso",
+          message: "Meta atualizada e doador registrado com sucesso",
           ideaId: idea.id,
           newAmount: updatedIdea.currentAmount,
+          donorId: donor.id,
         });
       } else {
         console.log(

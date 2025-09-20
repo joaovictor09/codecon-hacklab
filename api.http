@@ -18,6 +18,10 @@ GET http://localhost:3333/ideas
 GET http://localhost:3333/ideas/418f7d78-5061-4b0c-b5e9-d033af67880c
 
 ###
+# @name GetIdeaDonors
+GET http://localhost:3333/ideas/418f7d78-5061-4b0c-b5e9-d033af67880c/donors
+
+###
 # @name WebhookAsaas
 POST http://localhost:3333/webhook/asaas
 Content-Type: application/json
